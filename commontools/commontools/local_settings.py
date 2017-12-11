@@ -12,6 +12,8 @@ __description__ = 'Django项目的本地设置，当同步代码后，在本地�
 import os
 from settings import LOG_DIR
 
+# more info reference: https://stackoverflow.com/questions/1626326/how-to-manage-local-vs-production-settings-in-django#
+
 DEBUG = True
 
 # logging level: CRITICAL > ERROR > WARNING > INFO > DEBUG > NOTSET
