@@ -14,7 +14,7 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'amw+-v+0#!@wv4@=o=i)z^o)%g0sm_jhbf35_72kq(yda+0(kp'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -39,6 +39,50 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
+LOGGING_CONFIG = 'logging.config.dictConfig'
+# Application definition
+LOG_DIR = os.path.join(BASE_DIR, 'logs')
+if not os.path.exists(LOG_DIR):
+    os.mkdir(LOG_DIR)
+
+# define logger
+LOGGING = {
+    'version': '1.0.0',
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(asctime)s %(levelname)s %(relativeCreated)d %(created)f %(filename)s '
+                      '%(levelno)s %(module)s %(funcName)s %(lineno)d %(msecs)d %(name)s %(message)s'
+        },
+        'simple': {
+            'format': '%(asctime)s - %(name)s - %(funcName)s - %(levelname)s - %(message)s'
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': '',
+            'formatter': 'simple',
+            'class': 'logging.StreamHandler',
+        },
+        'filehandler': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'formatter': 'simple',
+            'filename': os.path.join(LOG_DIR, "service.log")
+        },
+    },
+    'loggers': {
+        'django.db.backends': {
+            'handlers': ['console', 'filehandler'],
+            'level': 'DEBUG',
+        },
+        'common': {
+            'handlers': ['console', 'filehandler'],
+            'level': 'WARNING',
+        },
+    }
+}
+
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -48,6 +92,8 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.core.files.uploadhandler.MemoryFileUploadHandler',  # upload requirements
+    'django.core.files.uploadhandler.TemporaryFileUploadHandler',  # upload requirements
 ]
 
 ROOT_URLCONF = 'commontools.urls'
@@ -104,9 +150,13 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+# LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+# TIME_ZONE = 'UTC'
+
+LANGUAGE_CODE = 'zh-Hans'
+
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
@@ -117,5 +167,12 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 STATIC_URL = '/static/'
+
+# overwrite sectional settings
+try:
+    from local_settings import *
+except ImportError:
+    pass
