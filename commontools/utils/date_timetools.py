@@ -26,7 +26,7 @@ def change_time(all_time):
     """
     day = 24 * 60 * 60
     hour = 60 * 60
-    min = 60
+    minute = 60
     if all_time > day:
         days = divmod(all_time, day)
         return u"%d天 %s" % (int(days[0]), change_time(days[1]))
@@ -34,8 +34,8 @@ def change_time(all_time):
         hours = divmod(all_time, hour)
         return u'%d时%s' % (int(hours[0]), change_time(hours[1]))
     else:
-        mins = divmod(all_time, min)
-        return u"%d分" % (int(mins[0]))
+        minutes = divmod(all_time, minute)
+        return u"%d分" % (int(minutes[0]))
 
 
 def weekday_start_end_date(base_date=None, is_range_needed=None, choice=None):
@@ -73,12 +73,13 @@ def weekday_start_end_date(base_date=None, is_range_needed=None, choice=None):
         return start_date, end_date
 
 
-def gen_percent(numbers):
+def gen_percent(numbers, digital=None):
     """计算百分比
 
     :param numbers a list of int
     :return result a list of percentage
     """
+    # TODO 将保存的小数位数作为参数
     if len(numbers) < 1:
         return False
     s = sum(numbers)
