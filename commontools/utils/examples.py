@@ -160,28 +160,28 @@ GROUP BY stf.alarmtype, stf.timeBlock) sss group by sss.alarmtype, sss.timeBlock
 # #############################################################################################
 
 # SQL
-# fire_alarm_sql = "SELECT    ttt.d_component_type,    ttt.statisticCount,    ttt.percentvalue \
-#             FROM    (    SELECT    t.d_component_type,    t.statisticCount,    \
-#             CONCAT(    ROUND(t.statisticCount / tt.totalStatisticCount * 100,    1    ), '%%') \
-#             AS percentvalue    FROM (    SELECT    d.component_type AS d_component_type,  \
-#               r.component_type AS r_component_type,    COUNT(r.component_type) AS statisticCount   \
-#                FROM    rt_alarm r    JOIN dic_component_type d ON r.component_type = d.id   \
-#                 WHERE  dtu_id in (select dtu_id from relation_company_dtu where company_id = %s)  \
-#                  AND  confirm_type > 0  AND EXTRACT(YEAR_MONTH FROM receive_time) \
-#                 BETWEEN EXTRACT(    YEAR_MONTH    FROM    \
-#                 DATE_SUB(    NOW(), INTERVAL 6 MONTH    )    )    \
-#                 AND EXTRACT(    YEAR_MONTH    FROM    \
-#                 DATE_SUB(    NOW(),    INTERVAL 0 MONTH    ) )   \
-#                 GROUP BY r.component_type    ) t, \
-#                  (    SELECT COUNT(r.component_type) AS totalStatisticCount    \
-#                  FROM    rt_alarm r    JOIN dic_component_type d ON r.component_type = d.id    \
-#                  WHERE  dtu_id in (select dtu_id from relation_company_dtu where company_id = %s) \
-#                  AND   confirm_type > 0    AND EXTRACT(YEAR_MONTH FROM receive_time) \
-#                  BETWEEN EXTRACT(    YEAR_MONTH    FROM    \
-#                  DATE_SUB(    NOW(),INTERVAL 6 MONTH    )    )   \
-#                   AND EXTRACT(YEAR_MONTH    FROM \
-#                   DATE_SUB(NOW(), INTERVAL 0 MONTH))) tt) ttt \
-#                   ORDER BY    ttt.statisticCount DESC ;"
+"SELECT    ttt.d_component_type,    ttt.statisticCount,    ttt.percentvalue \
+FROM    (    SELECT    t.d_component_type,    t.statisticCount,    \
+CONCAT(    ROUND(t.statisticCount / tt.totalStatisticCount * 100,    1    ), '%%') \
+AS percentvalue    FROM (    SELECT    d.component_type AS d_component_type,  \
+  r.component_type AS r_component_type,    COUNT(r.component_type) AS statisticCount   \
+   FROM    rt_alarm r    JOIN dic_component_type d ON r.component_type = d.id   \
+    WHERE  dtu_id in (select dtu_id from relation_company_dtu where company_id = %s)  \
+     AND  confirm_type > 0  AND EXTRACT(YEAR_MONTH FROM receive_time) \
+    BETWEEN EXTRACT(    YEAR_MONTH    FROM    \
+    DATE_SUB(    NOW(), INTERVAL 6 MONTH    )    )    \
+    AND EXTRACT(    YEAR_MONTH    FROM    \
+    DATE_SUB(    NOW(),    INTERVAL 0 MONTH    ) )   \
+    GROUP BY r.component_type    ) t, \
+     (    SELECT COUNT(r.component_type) AS totalStatisticCount    \
+     FROM    rt_alarm r    JOIN dic_component_type d ON r.component_type = d.id    \
+     WHERE  dtu_id in (select dtu_id from relation_company_dtu where company_id = %s) \
+     AND   confirm_type > 0    AND EXTRACT(YEAR_MONTH FROM receive_time) \
+     BETWEEN EXTRACT(    YEAR_MONTH    FROM    \
+     DATE_SUB(    NOW(),INTERVAL 6 MONTH    )    )   \
+      AND EXTRACT(YEAR_MONTH    FROM \
+      DATE_SUB(NOW(), INTERVAL 0 MONTH))) tt) ttt \
+      ORDER BY    ttt.statisticCount DESC ;"
 
 
 # #############################################################################################
@@ -227,13 +227,6 @@ class BuildingSerializer(serializers.ModelSerializer):
             return expanded_fields
 
     def to_representation(self, instance):
-        int_key = ['building_height', 'property_id', 'fire_level_id', 'fire_resistance_id',
-                   'building_structure_id', 'building_type_id', 'covered_area', 'building_area',
-                   'layer_area', 'ongrounder_floors', 'underground_floors', 'ongrounder_area',
-                   'underground_area', 'tunnel_height', 'tunnel_length', 'refuge_floors_count',
-                   'refuge_floors_area', 'main_storage_count', 'working_time_population',
-                   'max_population', 'elevator_count', 'elevator_weight', 'exit_count', ]
-
         def revalue(dict_):  # 重新赋值，可以统一用来格式化字符串操作（或者重命名）
             pass
         ret = super(BuildingSerializer, self).to_representation(instance)
