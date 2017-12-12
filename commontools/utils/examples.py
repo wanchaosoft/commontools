@@ -8,6 +8,8 @@ __author__ = 'wanchao'
 __create_time__ = '2017/12/11 16:47'
 
 """
+from collections import OrderedDict
+
 from django.db import connection
 from django.db.models import Case, IntegerField
 from django.db.models import Sum
@@ -15,6 +17,8 @@ from django.db.models import Value
 from django.db.models import When
 from django.http import HttpResponse
 from datetime import datetime, date, timedelta
+
+from rest_framework import serializers
 
 now = datetime.now()
 
@@ -42,7 +46,7 @@ def get_users(request):
         # 组合为JSON数据返回
         return HttpResponse()
 
-
+# #############################################################################################
 # 按天统计: Case, When
 # queryset.aggregate(
 #     Monday=Sum(Case(When(receive_time__date=dates[0], then=1),
@@ -61,6 +65,8 @@ def get_users(request):
 #                     output_field=IntegerField(), default=Value(0))),
 # )
 
+
+# #############################################################################################
 
 # 按小时统计
 
@@ -151,6 +157,8 @@ AND EXTRACT(YEAR_MONTH FROM date_sub(NOW(), INTERVAL 1 MONTH))  ) t ) stf \
 GROUP BY stf.alarmtype, stf.timeBlock) sss group by sss.alarmtype, sss.timeBlock;'
 
 
+# #############################################################################################
+
 # SQL
 # fire_alarm_sql = "SELECT    ttt.d_component_type,    ttt.statisticCount,    ttt.percentvalue \
 #             FROM    (    SELECT    t.d_component_type,    t.statisticCount,    \
@@ -175,3 +183,74 @@ GROUP BY stf.alarmtype, stf.timeBlock) sss group by sss.alarmtype, sss.timeBlock
 #                   DATE_SUB(NOW(), INTERVAL 0 MONTH))) tt) ttt \
 #                   ORDER BY    ttt.statisticCount DESC ;"
 
+
+# #############################################################################################
+
+
+# 这里一般用于`Model`本身字段比较多的情况，就用__all__代替，但是不属于该Model的字段可以通过下述
+# `get_field_names`来获得
+class BuildingSerializer(serializers.ModelSerializer):
+    building_name = serializers.CharField(read_only=True, source='get_building_name')
+    building_height = serializers.CharField(read_only=True, source='get_building_height')
+    control_room_location = serializers.CharField(
+        read_only=True, source='get_control_room_location')
+    fire_level = serializers.CharField(
+        read_only=True, source='get_building_fire_level')
+    fire_resistance = serializers.CharField(
+        read_only=True, source='get_building_fire_resistance')
+    property = serializers.CharField(
+        read_only=True, source='get_building_property')
+    building_structure = serializers.CharField(
+        read_only=True, source='get_building_structure')
+    building_type = serializers.CharField(
+        read_only=True, source='get_building_type')
+    company_name = serializers.CharField(
+        read_only=True, source='get_company_name')
+    sectional_elevation = serializers.SerializerMethodField()
+    fire_equipment_layout_image = serializers.SerializerMethodField()
+    ichnography = serializers.SerializerMethodField()
+
+    class Meta:
+        model = 'Your Model Name(not str)'
+        fields = '__all__'
+        # 通过extra_fields来声明额外获取的字段名称
+        extra_fields = ['building_name', 'building_height', 'control_room_location',
+                        'fire_level', 'fire_resistance', 'property',
+                        'building_structure', 'building_type', 'company_name']
+
+    def get_field_names(self, declared_fields, info):  # 这个是重点
+        expanded_fields = super(BuildingSerializer, self).get_field_names(declared_fields, info)
+
+        if getattr(self.Meta, 'extra_fields', None):
+            return expanded_fields + self.Meta.extra_fields
+        else:
+            return expanded_fields
+
+    def to_representation(self, instance):
+        int_key = ['building_height', 'property_id', 'fire_level_id', 'fire_resistance_id',
+                   'building_structure_id', 'building_type_id', 'covered_area', 'building_area',
+                   'layer_area', 'ongrounder_floors', 'underground_floors', 'ongrounder_area',
+                   'underground_area', 'tunnel_height', 'tunnel_length', 'refuge_floors_count',
+                   'refuge_floors_area', 'main_storage_count', 'working_time_population',
+                   'max_population', 'elevator_count', 'elevator_weight', 'exit_count', ]
+
+        def revalue(dict_):  # 重新赋值，可以统一用来格式化字符串操作（或者重命名）
+            pass
+        ret = super(BuildingSerializer, self).to_representation(instance)
+        return OrderedDict(list(map(lambda x: (x[0], revalue(x)), ret.items())))
+
+
+# #############################################################################################
+
+
+# ClassBaseView 禁用csrf验证
+from rest_framework.authentication import SessionAuthentication
+
+class CsrfExemptSessionAuthentication(SessionAuthentication):
+    def enforce_csrf(self, request):
+        pass
+
+
+def cbv_csrf_exempt(cls):  # 装饰cbv
+    cls.authentication_classes = (CsrfExemptSessionAuthentication, )
+    return cls
