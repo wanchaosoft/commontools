@@ -38,7 +38,7 @@ def change_time(all_time):
         return u"%d分" % (int(minutes[0]))
 
 
-def weekday_start_end_date(base_date=None, is_range_needed=None, choice=None):
+def weekday_range(base_date=None, is_range_needed=None, choice=None):
     """一周内的统计其实时间计算
 
     根据给定日期计算
@@ -73,8 +73,8 @@ def weekday_start_end_date(base_date=None, is_range_needed=None, choice=None):
         return start_date, end_date
 
 
-def gen_percent(numbers, digital=None):
-    """计算百分比
+def generate_percent(numbers, digital=None):
+    """Calculate percent, no such precision.
 
     :param numbers a list of int
     :return result a list of percentage

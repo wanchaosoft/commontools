@@ -52,7 +52,9 @@ coverage.xml
 
 # Django stuff:
 *.log
-local_settings.py
+
+# if you use, please release the following.
+# local_settings.py
 
 # Flask stuff:
 instance/
@@ -100,5 +102,5 @@ ENV/
 # mypy
 .mypy_cache/
 
-# Pycharm project file
+# Pycharm project files
 .idea/
