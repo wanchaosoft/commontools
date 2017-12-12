@@ -35,6 +35,11 @@ def test_psutil():
     print(psutil.cpu_freq())
     # and others: memory, disk, network, sensors, Other system info, Process management
 
+# 生成优惠码
+import string
+choices = string.ascii_uppercase + string.digits
+
+
 if __name__ == '__main__':
     # test_chinese(u'郑王')
     # test_phone('17754913165')
