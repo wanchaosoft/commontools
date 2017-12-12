@@ -9,10 +9,6 @@ __create_time__ = '2017/12/11 16:56'
 
 """
 
-
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# Created by ChenXin on 2017/7/17
 from __future__ import unicode_literals
 from rest_framework.views import APIView
 from django.core.exceptions import ValidationError

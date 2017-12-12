@@ -117,11 +117,13 @@ def _is_file(path):
     if 'static' not in path:
         raise Exception('The destination path is not exists.')
 
-    res = _base + path.split('static')[1]
+    _path = _base + path.split('static')[1]
 
-    if os.path.exists(res):
-        return res
-    return ''
+    if not os.path.exists(_path):
+        raise Exception('The path error.')
+
+    is_file = os.path.isfile(_path)
+    return is_file
 
 
 def _del_file(absolute_path):
