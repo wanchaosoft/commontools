@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'utils',
+    'cases',
+    'practices',
 ]
 
 LOGGING_CONFIG = 'logging.config.dictConfig'

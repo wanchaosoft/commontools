@@ -104,3 +104,6 @@ ENV/
 
 # Pycharm project files
 .idea/
+
+# sqlite3 database source
+*.sqlite3

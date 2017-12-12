@@ -247,3 +247,5 @@ class CsrfExemptSessionAuthentication(SessionAuthentication):
 def cbv_csrf_exempt(cls):  # 装饰cbv
     cls.authentication_classes = (CsrfExemptSessionAuthentication, )
     return cls
+
+
