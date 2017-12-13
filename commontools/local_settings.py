@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""
+u"""
 
 __project__ = 'commontools'
 __author__ = 'wanchao'
@@ -53,4 +53,3 @@ LOGGING = {
         },
     }
 }
-
