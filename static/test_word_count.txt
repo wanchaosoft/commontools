@@ -1,0 +1,17 @@
+This is a test
+for testing-suite.
+wo your hello is a sentence
+
+================== count result ================
+"a" happen: 2times.
+"This" happen: 1times.
+"is" happen: 2times.
+"test
+for" happen: 1times.
+"your" happen: 1times.
+"testing-suite.
+wo" happen: 1times.
+"sentence
+
+" happen: 1times.
+"hello" happen: 1times.
