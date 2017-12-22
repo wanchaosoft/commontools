@@ -21,7 +21,7 @@ from django.contrib import admin
 urlpatterns = [
 
     url(r'^admin/', include(admin.site.urls)),  # default
-    # url(r'^center/', include('dsn.urls')),  # example
+    url(r'^api/', include('mysite.urls')),  # example
 ]
 
 # add

@@ -30,7 +30,6 @@ def calc_size(image, old_size, standard_size):
         return old_[0] / tmp2, new_[1]
 
 
-
 def resize_image(image, sizes, destination):
     u"""重新尺寸"""
     length, height = sizes

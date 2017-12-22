@@ -26,24 +26,31 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 SECRET_KEY = 'amw+-v+0#!@wv4@=o=i)z^o)%g0sm_jhbf35_72kq(yda+0(kp'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
 
 # Application definition
 
-INSTALLED_APPS = [
+PREREQ_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+]
+
+PROJECT_APPS = [
     'utils',
     'cases',
     'practices',
+    'mysite',
+    'mixins',
 ]
+
+INSTALLED_APPS = PREREQ_APPS + PROJECT_APPS
 
 LOGGING_CONFIG = 'logging.config.dictConfig'
 # Application definition
@@ -107,7 +114,7 @@ ROOT_URLCONF = 'commontools.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
