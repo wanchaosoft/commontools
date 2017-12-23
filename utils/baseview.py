@@ -18,7 +18,6 @@ from django.shortcuts import HttpResponse
 from django.http.response import HttpResponseBase
 import json
 import logging
-from fb_error import FBErrors
 from django.db.utils import OperationalError
 import re
 logger = logging.getLogger(__name__)
@@ -48,7 +47,7 @@ class FBApiView(APIView):
                 info.update({"msg": "参数错误"})
                 return HttpResponse(json.dumps(info, ensure_ascii=False), status=200,
                                     content_type=" application/json")
-            except FBErrors as e:
+            except Exception as e:
                 logger.exception("custom_error_for_pro")
                 logger.error(request.data)
                 logger.error(request.query_params)
@@ -97,28 +96,28 @@ class FBApiView(APIView):
                                 status=405,
                                 content_type=" application/json")
 
-    def finalize_response(self, request, response, *args, **kwargs):
-        """
-        Returns the final response object.
-        """
-
-        response = Response(response)
-        assert isinstance(response, HttpResponseBase), (
-            'Expected a `Response`, `HttpResponse` or `HttpStreamingResponse` '
-            'to be returned from the view, but received a `%s`'
-            % type(response)
-        )
-
-        if isinstance(response, Response):
-            if not getattr(request, 'accepted_renderer', None):
-                neg = self.perform_content_negotiation(request, force=True)
-                request.accepted_renderer, request.accepted_media_type = neg
-
-            response.accepted_renderer = request.accepted_renderer
-            response.accepted_media_type = request.accepted_media_type
-            response.renderer_context = self.get_renderer_context()
-
-        for key, value in self.headers.items():
-            response[key] = value
-        return response
+    # def finalize_response(self, request, response, *args, **kwargs):
+    #     """
+    #     Returns the final response object.
+    #     """
+    #
+    #     response = Response(response)
+    #     assert isinstance(response, HttpResponseBase), (
+    #         'Expected a `Response`, `HttpResponse` or `HttpStreamingResponse` '
+    #         'to be returned from the view, but received a `%s`'
+    #         % type(response)
+    #     )
+    #
+    #     if isinstance(response, Response):
+    #         if not getattr(request, 'accepted_renderer', None):
+    #             neg = self.perform_content_negotiation(request, force=True)
+    #             request.accepted_renderer, request.accepted_media_type = neg
+    #
+    #         response.accepted_renderer = request.accepted_renderer
+    #         response.accepted_media_type = request.accepted_media_type
+    #         response.renderer_context = self.get_renderer_context()
+    #
+    #     for key, value in self.headers.items():
+    #         response[key] = value
+    #     return response
 
